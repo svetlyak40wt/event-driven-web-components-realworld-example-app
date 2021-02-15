@@ -18,7 +18,7 @@ export default class ListArticlePreviews extends HTMLElement {
     /**
      * Listens to the event name/typeArg: 'listArticles'
      *
-     * @param {CustomEvent & {detail: import("../controllers/ListArticles.js").ListArticlesEventDetail}} event
+     * @param {CustomEvent & {detail: import("../controllers/Article.js").ListArticlesEventDetail}} event
      */
     this.listArticlesListener = event => this.render(event.detail.fetch)
   }
@@ -30,7 +30,7 @@ export default class ListArticlePreviews extends HTMLElement {
     // it is possible to have multiple components request the same data on connectCallback but then it ether should expect a private response by a promise with caching or tolerate abort
     // on every connect it will attempt to get newest articles
     // this.dispatchEvent(new CustomEvent('requestListArticles', {
-    //   /** @type {import("../controllers/ListArticles.js").RequestListArticlesEventDetail} */
+    //   /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
     //   detail: {},
     //   bubbles: true,
     //   cancelable: true,

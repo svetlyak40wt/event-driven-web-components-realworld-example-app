@@ -32,7 +32,7 @@ export default class TagList extends HTMLElement {
       event.preventDefault()
       // on every link click it will attempt to get articles by tags
       this.dispatchEvent(new CustomEvent('requestListArticles', {
-        /** @type {import("../controllers/ListArticles.js").RequestListArticlesEventDetail} */
+        /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
         detail: { tag: event.target.textContent },
         bubbles: true,
         cancelable: true,

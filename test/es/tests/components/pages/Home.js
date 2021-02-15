@@ -45,8 +45,8 @@ export const test = (testTitle = 'organisms/Home', moduleName = 'default', modul
     const parent = el.parentNode
     // set timeout due to render is async
     setTimeout(() => {
-      test.test('home-content', el => !!el.querySelector('c-list-articles') && !!el.querySelector('o-list-article-previews'), undefined, el)
-      test.test('home-defined-child-components', () => customElements.get('c-list-articles') && customElements.get('o-list-article-previews'), undefined, el)
+      test.test('home-content', el => !!el.querySelector('o-list-article-previews'), undefined, el)
+      test.test('home-defined-child-components', () => customElements.get('o-list-article-previews'), undefined, el)
       // remove and append to trigger connectedCallback
       el.remove()
       parent.appendChild(el)

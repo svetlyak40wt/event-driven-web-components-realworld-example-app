@@ -24,7 +24,7 @@ export default class Pagination extends HTMLElement {
     /**
      * Listens to the event name/typeArg: 'listArticles'
      *
-     * @param {CustomEvent & {detail: import("../controllers/ListArticles").ListArticlesEventDetail}} event
+     * @param {CustomEvent & {detail: import("../controllers/Article").ListArticlesEventDetail}} event
      */
     this.listArticlesListener = event => this.render(event.detail.fetch, event.detail.query)
 
@@ -39,7 +39,7 @@ export default class Pagination extends HTMLElement {
       event.preventDefault()
       // on every link click it will attempt to get articles by pagination
       this.dispatchEvent(new CustomEvent('requestListArticles', {
-        /** @type {import("../controllers/ListArticles.js").RequestListArticlesEventDetail} */
+        /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
         detail: Object.assign({
           offset: (Number(event.target.textContent) - 1) * Environment.articlesPerPageLimit,
           showYourFeed: this.showYourFeed
@@ -56,7 +56,7 @@ export default class Pagination extends HTMLElement {
     this.addEventListener('click', this.clickListener)
     // on every connect it will attempt to get newest articles
     this.dispatchEvent(new CustomEvent('requestListArticles', {
-      /** @type {import("../controllers/ListArticles.js").RequestListArticlesEventDetail} */
+      /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
       detail: {},
       bubbles: true,
       cancelable: true,
@@ -73,7 +73,7 @@ export default class Pagination extends HTMLElement {
    * renders the articles pagination
    *
    * @param {Promise<import("../../helpers/Interfaces.js").MultipleArticles>} fetchMultipleArticles
-   * @param {import("../controllers/ListArticles").RequestListArticlesEventDetail} query
+   * @param {import("../controllers/Article").RequestListArticlesEventDetail} query
    * @return {void}
    */
   render (fetchMultipleArticles, query) {

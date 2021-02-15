@@ -13,7 +13,7 @@ let counter = 0
  * @param {string} [namespace = '']
  * @return {Promise<[number, number, number]>}
  */
-export const test = (testTitle = 'controllers/ListArticles', moduleName = 'default', modulePath = '../../src/es/components/controllers/ListArticles.js', namespace = counter) => {
+export const test = (testTitle = 'controllers/Article', moduleName = 'default', modulePath = '../../src/es/components/controllers/Article.js', namespace = counter) => {
   let resolveTest
   const result = new Promise(resolve => resolveTest = resolve)
   // test modulePath must be from Test.js perspective
@@ -37,7 +37,7 @@ export const test = (testTitle = 'controllers/ListArticles', moduleName = 'defau
       document.body.removeEventListener('listArticles', func)
     }))
     child.dispatchEvent(new CustomEvent('requestListArticles', {
-      /** @type {import("../../../../../src/es/components/controllers/ListArticles").RequestListArticlesEventDetail} */
+      /** @type {import("../../../../../src/es/components/controllers/Article").RequestListArticlesEventDetail} */
       detail: {},
       bubbles: true,
       cancelable: true,

@@ -69,7 +69,7 @@
     import '../src/es/helpers/Environment.js'
     import '../src/es/helpers/Debugging.js'
     import {test as routerTest} from './es/tests/components/controllers/Router.js'
-    import {test as listArticlesTest} from './es/tests/components/controllers/ListArticles.js'
+    import {test as articlesTest} from './es/tests/components/controllers/Article.js'
     import {test as getTagsTest} from './es/tests/components/controllers/GetTags.js'
     import {test as homeTest} from './es/tests/components/pages/Home.js'
     import {test as headerTest} from './es/tests/components/organisms/Header.js'
@@ -85,7 +85,7 @@
     }, 10000);
     Promise.all([
       routerTest(),
-      listArticlesTest(),
+      articlesTest(),
       getTagsTest(),
       homeTest(),
       headerTest(),

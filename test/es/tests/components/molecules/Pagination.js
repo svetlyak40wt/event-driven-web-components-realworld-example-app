@@ -40,7 +40,7 @@ export const test = (testTitle = 'molecules/Pagination', moduleName = 'default',
     const parent = el.parentNode
     test.test('pagination-empty', el => !el.innerHTML, undefined, el)
     document.body.dispatchEvent(new CustomEvent('paginationTest', {
-      /** @type {import("../../../../../src/es/components/controllers/ListArticles.js").ListArticlesEventDetail} */
+      /** @type {import("../../../../../src/es/components/controllers/Article.js").ListArticlesEventDetail} */
       detail: {
         fetch: Promise.resolve({
           articlesCount: 250,

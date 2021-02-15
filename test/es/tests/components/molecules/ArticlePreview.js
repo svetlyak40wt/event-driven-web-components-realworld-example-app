@@ -64,7 +64,7 @@ export const test = (testTitle = 'molecules/ArticlePreview', moduleName = 'defau
       el.querySelector('.info')?.click()
       document.body.removeEventListener('setFavorite', func1)
       document.body.removeEventListener('click', func2)
-      test.test('article-preview-click-counts', () => gotClicks === 5, undefined, el)
+      test.test('article-preview-click-counts', () => gotClicks === 3, undefined, el)
       // remove and append to trigger connectedCallback
       el.remove()
       parent.appendChild(el)

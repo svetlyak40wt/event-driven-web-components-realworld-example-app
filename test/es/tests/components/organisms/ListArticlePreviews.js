@@ -44,7 +44,7 @@ export const test = (testTitle = 'organisms/ListArticlePreviews', moduleName = '
     const parent = el.parentNode
     test.test('list-article-previews-empty', el => !el.innerHTML, undefined, el)
     document.body.dispatchEvent(new CustomEvent('listArticlePreviewsTest', {
-      /** @type {import("../../../../../src/es/components/controllers/ListArticles.js").ListArticlesEventDetail} */
+      /** @type {import("../../../../../src/es/components/controllers/Article.js").ListArticlesEventDetail} */
       detail: {
         fetch: Promise.resolve({
           articles: [
@@ -70,7 +70,6 @@ export const test = (testTitle = 'organisms/ListArticlePreviews', moduleName = '
     }))
     // wait for the Promise to resolve
     setTimeout(() => {
-      console.log('changed', el?.children?.length);
       test.test('list-article-previews-content', el => el?.children?.length === 3, undefined, el)
       // remove and append to trigger connectedCallback
       el.remove()

@@ -19,7 +19,7 @@ export default class ArticleFeedToggle extends HTMLElement {
     /**
      * Listens to the event name/typeArg: 'listArticles'
      *
-     * @param {CustomEvent & {detail: import("../controllers/ListArticles").ListArticlesEventDetail}} event
+     * @param {CustomEvent & {detail: import("../controllers/Article").ListArticlesEventDetail}} event
      */
     this.listArticlesListener = event => this.render(event.detail.query.tag, undefined, event.detail.query.showYourFeed)
 
@@ -49,7 +49,7 @@ export default class ArticleFeedToggle extends HTMLElement {
       if (event.target.id === 'your-feed' && this.isFeedDisabled) {
         // get logged in users feed
         this.dispatchEvent(new CustomEvent('requestListArticles', {
-          /** @type {import("../controllers/ListArticles.js").RequestListArticlesEventDetail} */
+          /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
           detail: {
             showYourFeed: true
           },
@@ -60,7 +60,7 @@ export default class ArticleFeedToggle extends HTMLElement {
       } else {
         // on every link click it will attempt to get articles by tags
         this.dispatchEvent(new CustomEvent('requestListArticles', {
-          /** @type {import("../controllers/ListArticles.js").RequestListArticlesEventDetail} */
+          /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
           detail: {},
           bubbles: true,
           cancelable: true,

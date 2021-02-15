@@ -38,12 +38,13 @@ export const test = (testTitle = 'organisms/Header', moduleName = 'default', mod
     }
   ).then(el => {
     const parent = el.parentNode
-    test.test('header-content', el => !!el.querySelector('a.navbar-brand')?.href?.includes('index') && !!el.querySelector('.navbar-nav'), undefined, el)
+    test.test('header-content', el => !!el.querySelector('a.navbar-brand')?.href?.includes('#/') && !!el.querySelector('.navbar-nav'), undefined, el)
     // remove and append to trigger connectedCallback
     el.remove()
     parent.appendChild(el)
-    test.test('header-render-counts', () => renderCount === 1, undefined, el)
-    test.test('header-should-component-render-counts', () => shouldComponentRenderCounter === 2, undefined, el)
+    test.test('header-render-counts', () => renderCount === 2, undefined, el)
+    // shouldComponentRender is only triggered on userListener
+    test.test('header-should-component-render-counts', () => shouldComponentRenderCounter === 0, undefined, el)
     resolveTest([test.counter, test.passedCounter, test.failedCounter])
   })
   // ------------------------------------------------------------------------------------------------------------
