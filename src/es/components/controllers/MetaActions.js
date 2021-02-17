@@ -10,7 +10,7 @@
 /**
  * https://github.com/gothinkster/realworld/tree/master/api#favorite-article
  *
- * @typedef {{ article: import("../../helpers/Interfaces.js").SingleArticle} SetFavoriteEventDetail
+ * @typedef {{ article?: import("../../helpers/Interfaces.js").SingleArticle, profile?: import("../../helpers/Interfaces.js").Profile}} SetFavoriteEventDetail
  */
 
 import { Environment } from '../../helpers/Environment.js'
@@ -93,20 +93,20 @@ export default class Favorite extends HTMLElement {
      * Listens to the event name/typeArg: 'setFavorite'
      *
      * @param {CustomEvent & {detail: SetFavoriteEventDetail}} event
-     * @return {Promise<import("../../helpers/Interfaces.js").SingleArticle | Error> | false}
+     * @return {Promise<import("../../helpers/Interfaces.js").SingleArticle | Error> | any}
      */
     this.followUserListener = event => {
-      if (!this.isAuthenticated) self.location.href = '#/register'
+      if (!this.isAuthenticated) return (self.location.href = '#/register')
 
-      if (!event.detail.article || !this.isAuthenticated) return false
+      if (!event.detail.article && !event.detail.profile.username) return false
 
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
 
-      const url = `${Environment.fetchBaseUrl}profiles/${event.detail.article.author.username}/follow`
+      const url = `${Environment.fetchBaseUrl}profiles/${event.detail.article && event.detail.article.author.username || event.detail.profile.username}/follow`
 
       return fetch(url, {
-        method: event.detail.article.author.following ? 'DELETE' : 'POST',
+        method: event.detail.article && event.detail.article.author.following ? 'DELETE' : event.detail.profile.following ? 'DELETE' : 'POST',
         ...Environment.fetchHeaders,
         signal: this.abortController.signal
       }).then(response => {
@@ -120,18 +120,27 @@ export default class Favorite extends HTMLElement {
          * @return {void | false}
          */
         ({ profile }) => {
-          const article = Object.assign(event.detail.article, { author: profile })
-          console.log('changed', article)
-          this.dispatchEvent(new CustomEvent('article', {
-            /** @type {GetArticleEventDetail} */
-            detail: {
-              slug: article.slug,
-              fetch: Promise.resolve({ article: article })
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
+          if (event.detail.article) {
+            const article = Object.assign(event.detail.article, { author: profile })
+            this.dispatchEvent(new CustomEvent('article', {
+              detail: {
+                slug: article.slug,
+                fetch: Promise.resolve({ article })
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else {
+            this.dispatchEvent(new CustomEvent('profile', {
+              detail: {
+                fetch: Promise.resolve({ profile })
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          }
         }
       // forward to login, if error means that the user is unauthorized
       // @ts-ignore

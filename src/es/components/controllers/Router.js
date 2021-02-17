@@ -64,7 +64,7 @@ export default class Router extends HTMLElement {
       // Profile page (URL: /#/profile/:username, /#/profile/:username/favorites )
       {
         name: 'p-profile',
-        path: '',
+        path: '../pages/Profile.js',
         regExp: new RegExp(/^#\/profile/)
       }
     ]

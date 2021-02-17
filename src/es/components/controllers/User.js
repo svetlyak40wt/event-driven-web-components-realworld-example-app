@@ -42,7 +42,7 @@ export default class User extends HTMLElement {
      *
      * @type {AbortController | null}
      */
-    this.abortController = null
+    this.abortController = this.abortControllerProfile = null
 
     /**
      * Listens to the event name/typeArg: 'loginUser'
@@ -65,7 +65,11 @@ export default class User extends HTMLElement {
               ...Environment.fetchHeaders,
               body: JSON.stringify(event.detail),
               signal: this.abortController.signal
-            }).then(response => response.json())
+            })
+            .then(response => {
+              if (response.status >= 200 && response.status <= 299) return response.json()
+              throw new Error(response.statusText)
+            })
             .then(data => {
               if (data.errors) throw data.errors
               if (data.user) {
@@ -98,7 +102,11 @@ export default class User extends HTMLElement {
               ...Environment.fetchHeaders,
               body: JSON.stringify(event.detail),
               signal: this.abortController.signal
-            }).then(response => response.json())
+            })
+            .then(response => {
+              if (response.status >= 200 && response.status <= 299) return response.json()
+              throw new Error(response.statusText)
+            })
             .then(data => {
               if (data.errors) throw data.errors
               if (data.user) {
@@ -131,7 +139,11 @@ export default class User extends HTMLElement {
               ...Environment.fetchHeaders,
               body: JSON.stringify(event.detail),
               signal: this.abortController.signal
-            }).then(response => response.json())
+            })
+            .then(response => {
+              if (response.status >= 200 && response.status <= 299) return response.json()
+              throw new Error(response.statusText)
+            })
             .then(data => {
               if (data.errors) throw data.errors
               if (data.user) {
@@ -161,7 +173,11 @@ export default class User extends HTMLElement {
               method: 'GET',
               ...Environment.fetchHeaders,
               signal: this.abortController.signal
-            }).then(response => response.json())
+            })
+            .then(response => {
+              if (response.status >= 200 && response.status <= 299) return response.json()
+              throw new Error(response.statusText)
+            })
             .then(data => {
               if (data.user) {
                 this.user = data.user
@@ -192,6 +208,36 @@ export default class User extends HTMLElement {
         composed: true
       }))
     }
+
+    this.getProfileListener = event => {
+      if (this.abortControllerProfile) this.abortController.abort()
+      this.abortControllerProfile = new AbortController()
+     
+      const url = `${Environment.fetchBaseUrl}profiles/${event.detail.username}`
+      this.dispatchEvent(new CustomEvent('profile', {
+        detail: {
+          fetch: fetch(url,
+            {
+              method: 'GET',
+              ...Environment.fetchHeaders,
+              signal: this.abortControllerProfile.signal
+            })
+            .then(response => {
+              if (response.status >= 200 && response.status <= 299) return response.json()
+              throw new Error(response.statusText)
+            })
+            .then(data => {
+              return data
+            })
+            .catch(error => {
+              console.log(`Error@ProfileFetch: ${error}`)
+            })
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   connectedCallback () {
@@ -200,6 +246,7 @@ export default class User extends HTMLElement {
     this.addEventListener('updateUser', this.updateUserListener)
     this.addEventListener('getUser', this.getUserListener)
     this.addEventListener('logoutUser', this.logoutUserListener)
+    this.addEventListener('getProfile', this.getProfileListener)
   }
 
   disconnectedCallback () {
@@ -208,5 +255,6 @@ export default class User extends HTMLElement {
     this.removeEventListener('updateUser', this.updateUserListener)
     this.removeEventListener('getUser', this.getUserListener)
     this.removeEventListener('logoutUser', this.logoutUserListener)
+    this.removeEventListener('getProfile', this.getProfileListener)
   }
 }
