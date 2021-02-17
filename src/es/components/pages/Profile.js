@@ -22,11 +22,11 @@ export default class Article extends HTMLElement {
     this.profile = null
 
     this.profileListener = event => {
-      event.detail.fetch.then(({profile}) => this.render(profile, undefined))
+      event.detail.fetch.then(({profile}) => { if (this.shouldComponentRender(profile, undefined)) this.render(profile, undefined) })
     }
 
     this.userListener = event => {
-      event.detail.fetch.then(user => this.render(undefined, user))
+      event.detail.fetch.then(user => { if (this.shouldComponentRender(undefined, user)) this.render(undefined, user) })
     }
 
     this.followBtnListener = event =>{
@@ -45,7 +45,7 @@ export default class Article extends HTMLElement {
   }
 
   connectedCallback () {
-    // this.loadChildComponents()
+    this.loadChildComponents()
     document.body.addEventListener('profile', this.profileListener)
     document.body.addEventListener('user', this.userListener)
 
@@ -70,6 +70,17 @@ export default class Article extends HTMLElement {
     document.body.removeEventListener('profile', this.profileListener)
     document.body.removeEventListener('user', this.userListener)
     if (this.btnFollow) this.btnFollow.removeEventListener('click', this.followBtnListener)
+  }
+
+  /**
+   * evaluates if a render is necessary
+   *
+   * @param {import("../../helpers/Interfaces.js").Profile} [profile = this.profile]
+   * @param {import("../../helpers/Interfaces.js").User} [user = this.user]
+   * @return {boolean}
+   */
+  shouldComponentRender (profile = this.profile, user = this.user) {
+    return profile !== this.profile || user !== this.user
   }
 
   /**
@@ -116,14 +127,14 @@ export default class Article extends HTMLElement {
 
       <div class="container">
         <div class="row">
-        <!--<div class="col-md-9">
-              <m-article-feed-toggle></m-article-feed-toggle>
+          <div class="col-md-9">
+            <m-article-feed-toggle></m-article-feed-toggle>
 
-              <o-list-article-previews><div class="article-preview">Loading...</div></o-list-article-previews>
+            <o-list-article-previews><div class="article-preview">Loading...</div></o-list-article-previews>
 
-              <m-pagination></m-pagination>
+            <m-pagination></m-pagination>
 
-            </div>-->
+          </div>
 
           <div class="col-xs-12 col-md-10 offset-md-1">
             <div class="articles-toggle">

@@ -72,7 +72,7 @@ export default class Router extends HTMLElement {
     /**
      * Listens to hash changes and forwards the new hash to route
      */
-    this.hashChangeListener = () => this.route(location.hash)
+    this.hashChangeListener = event =>  this.route(location.hash, false, event.newURL === event.oldURL)
   }
 
   connectedCallback () {
@@ -89,9 +89,10 @@ export default class Router extends HTMLElement {
    *
    * @param {string} hash
    * @param {boolean} [replace = false]
+   * @param {boolean} [isUrlEqual = true]
    * @return {void | string}
    */
-  route (hash, replace = false) {
+  route (hash, replace = false, isUrlEqual = true) {
     // escape on route call which is not set by hashchange event and trigger it here, if needed
     if (location.hash !== hash) {
       if (replace) return location.replace(hash)
@@ -108,7 +109,7 @@ export default class Router extends HTMLElement {
         // save it to route object for reuse. grab child if it already exists.
         return (route.component = this.children && this.children[0] && this.children[0].tagName === route.name.toUpperCase() ? this.children[0] : document.createElement(route.name))
       })).then(component => {
-        if (this.shouldComponentRender(route.name)) this.render(component)
+        if (this.shouldComponentRender(route.name, isUrlEqual)) this.render(component)
       // @ts-ignore
       }).catch(error => console.warn('Router did not find:', route) || error)
     }
@@ -118,11 +119,12 @@ export default class Router extends HTMLElement {
    * evaluates if a render is necessary
    *
    * @param {string} name
+   * @param {boolean} [isUrlEqual = true]
    * @return {boolean}
    */
-  shouldComponentRender (name) {
+  shouldComponentRender (name, isUrlEqual = true) {
     if (!this.children || !this.children.length) return true
-    return this.children[0].tagName !== name.toUpperCase()
+    return !isUrlEqual || this.children[0].tagName !== name.toUpperCase()
   }
 
   /**
