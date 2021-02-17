@@ -56,7 +56,5 @@ For more information on how to this works with other frontends/backends, head ov
 
 1. header/profile
 2. otherUser/profile
-3. following
-4. editor => edit & delete buttons
-5. article/comments etc.
-6. clean error handling at controller level (linter is complaining if there are no error handlings)
+3. article/comments etc.
+4. clean error handling at controller level (linter is complaining if there are no error handlings)
