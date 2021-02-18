@@ -12,7 +12,8 @@
  * @export
  * @attribute {
  *  favorited?: string,
- *  author?: string
+ *  author?: string,
+ *  itsMe?: boolean
  * }
  * @class ArticleFeedToggle
  */
@@ -21,7 +22,7 @@ export default class ArticleFeedToggle extends HTMLElement {
     super()
 
     /** @type {boolean} */
-    this.hasUser = false
+    this.isLoggedIn = false
     /** @type {import("../controllers/Article").RequestListArticlesEventDetail} */
     this.query = {}
 
@@ -42,14 +43,14 @@ export default class ArticleFeedToggle extends HTMLElement {
      */
     this.userListener = event => {
       event.detail.fetch.then(user => {
-        if (!this.hasUser) {
-          this.hasUser = true
+        if (!this.isLoggedIn) {
+          this.isLoggedIn = true
           this.render()
         }
       }).catch(error => {
         console.log(`Error@UserFetch: ${error}`)
-        if (this.hasUser) {
-          this.hasUser = false
+        if (this.isLoggedIn) {
+          this.isLoggedIn = false
           this.render()
         }
       })
@@ -69,7 +70,7 @@ export default class ArticleFeedToggle extends HTMLElement {
         this.dispatchEvent(new CustomEvent('requestListArticles', {
           /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
           detail: {
-            showYourFeed: this.hasUser,
+            showYourFeed: this.isLoggedIn,
             author: this.getAttribute('author') || ''
           },
           bubbles: true,
@@ -93,20 +94,22 @@ export default class ArticleFeedToggle extends HTMLElement {
 
   connectedCallback () {
     document.body.addEventListener('listArticles', this.listArticlesListener)
-    if (this.listenToUser) document.body.addEventListener('user', this.userListener)
     this.addEventListener('click', this.clickListener)
     if (this.shouldComponentRender()) this.render()
-    this.dispatchEvent(new CustomEvent('getUser', {
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+    if (this.listenToUser) {
+      document.body.addEventListener('user', this.userListener)
+      this.dispatchEvent(new CustomEvent('getUser', {
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   disconnectedCallback () {
     document.body.removeEventListener('listArticles', this.listArticlesListener)
-    if (this.listenToUser) document.body.removeEventListener('user', this.userListener)
     this.removeEventListener('click', this.clickListener)
+    if (this.listenToUser) document.body.removeEventListener('user', this.userListener)
   }
 
   /**
@@ -133,15 +136,15 @@ export default class ArticleFeedToggle extends HTMLElement {
      * 0: Your Feed or Users Post disabled?
      * @type {boolean}
      */
-    const disabled = this.listenToUser && !this.hasUser
+    const disabled = this.listenToUser && !this.isLoggedIn
     this.innerHTML = `
       <div class="feed-toggle">
         <ul class="nav nav-pills outline-active">
           <li class="nav-item">
-            <a id=your-feed class="nav-link${disabled ? ' disabled' : ''} ${active === 0 ? 'active' : ''}" href="#/">${this.getAttribute('author') ? `${this.getAttribute('author')} Posts` : 'Your Feed'}</a>
+            <a id=your-feed class="nav-link${disabled ? ' disabled' : ''} ${active === 0 ? 'active' : ''}" href="#/">${this.getAttribute('author') ? `${this.getAttribute('itsMe') ? 'My' : this.getAttribute('author')} Posts` : 'Your Feed'}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link ${active === 1 ? 'active' : ''}" href="#/">${this.getAttribute('favorited') ? `${this.getAttribute('author')} Favorited Posts` : 'Global Feed'}</a>
+            <a class="nav-link ${active === 1 ? 'active' : ''}" href="#/">${this.getAttribute('favorited') ? `${this.getAttribute('itsMe') ? '' : `${this.getAttribute('author')} `}Favorited Posts` : 'Global Feed'}</a>
           </li>
           ${active === 2 ? `
             <li class="nav-item">
