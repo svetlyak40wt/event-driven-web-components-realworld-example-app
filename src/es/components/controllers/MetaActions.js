@@ -103,10 +103,10 @@ export default class Favorite extends HTMLElement {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
 
-      const url = `${Environment.fetchBaseUrl}profiles/${event.detail.article && event.detail.article.author.username || event.detail.profile.username}/follow`
+      const url = `${Environment.fetchBaseUrl}profiles/${(event.detail.article && event.detail.article.author.username) || event.detail.profile.username}/follow`
 
       return fetch(url, {
-        method: event.detail.article && event.detail.article.author.following ? 'DELETE' : event.detail.profile.following ? 'DELETE' : 'POST',
+        method: event.detail.article && event.detail.article.author.following ? 'DELETE' : event.detail.profile && event.detail.profile.following ? 'DELETE' : 'POST',
         ...Environment.fetchHeaders,
         signal: this.abortController.signal
       }).then(response => {

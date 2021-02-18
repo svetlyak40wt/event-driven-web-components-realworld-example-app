@@ -1,11 +1,10 @@
 // @ts-check
 
-import { Environment } from "../../helpers/Environment.js";
+import { Environment } from '../../helpers/Environment.js'
 
 /* global HTMLElement */
 /* global customElements */
 /* global CustomEvent */
-/* global self */
 
 /**
  * https://github.com/Weedshaker/event-driven-web-components-realworld-example-app/blob/master/FRONTEND_INSTRUCTIONS.md#article
@@ -22,14 +21,14 @@ export default class Article extends HTMLElement {
     this.profile = null
 
     this.profileListener = event => {
-      event.detail.fetch.then(({profile}) => { if (this.shouldComponentRender(profile, undefined)) this.render(profile, undefined) })
+      event.detail.fetch.then(({ profile }) => { if (this.shouldComponentRender(profile, undefined)) this.render(profile, undefined) })
     }
 
     this.userListener = event => {
       event.detail.fetch.then(user => { if (this.shouldComponentRender(undefined, user)) this.render(undefined, user) })
     }
 
-    this.followBtnListener = event =>{
+    this.followBtnListener = event => {
       if (!event.target) return false
       event.preventDefault()
       this.dispatchEvent(new CustomEvent('followUser', {
@@ -49,7 +48,6 @@ export default class Article extends HTMLElement {
     document.body.addEventListener('profile', this.profileListener)
     document.body.addEventListener('user', this.userListener)
 
-  
     this.dispatchEvent(new CustomEvent('getProfile', {
       detail: {
         username: Environment.urlEnding
@@ -91,7 +89,7 @@ export default class Article extends HTMLElement {
    * @return {any}
    */
   render (profile = this.profile, user = this.user) {
-    console.log('changed', profile, user);
+    console.log('changed', profile, user)
     if (user) this.user = user
     if (profile) this.profile = profile
     if (!profile) return (this.innerHTML = '<div class="profile-page">An error occurred fetching the profile!</div>')
@@ -109,8 +107,8 @@ export default class Article extends HTMLElement {
               ${profile.bio || ''}
               </p>
 
-              ${user && profile && user.username === profile.username ?
-                `<a class="btn btn-outline-secondary btn-sm action-btn" href="#/settings">
+              ${user && profile && user.username === profile.username
+                ? `<a class="btn btn-outline-secondary btn-sm action-btn" href="#/settings">
                   <i class="ion-gear-a"></i> Edit Profile Settings
                 </a>`
                 : `<button name="follow" class="btn btn-sm  action-btn ${profile.following ? 'btn-secondary ' : 'btn-outline-secondary '}">

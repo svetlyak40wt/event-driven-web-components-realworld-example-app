@@ -212,7 +212,7 @@ export default class User extends HTMLElement {
     this.getProfileListener = event => {
       if (this.abortControllerProfile) this.abortController.abort()
       this.abortControllerProfile = new AbortController()
-     
+
       const url = `${Environment.fetchBaseUrl}profiles/${event.detail.username}`
       this.dispatchEvent(new CustomEvent('profile', {
         detail: {
