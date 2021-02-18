@@ -10,6 +10,10 @@ import { Environment } from '../../helpers/Environment.js'
  * As a molecule, this component shall hold Atoms
  *
  * @export
+ * @attribute {
+ *  favorited?: string,
+ *  author?: string
+ * }
  * @class Pagination
  */
 export default class Pagination extends HTMLElement {
@@ -18,6 +22,8 @@ export default class Pagination extends HTMLElement {
 
     // keep a reference with the last received listArticles tag used for new offset requests to avoid loosing tag focus
     this.tag = ''
+    this.author = ''
+    this.favorited = ''
     // avoid loosing feed focus
     this.showYourFeed = false
 
@@ -40,10 +46,13 @@ export default class Pagination extends HTMLElement {
       // on every link click it will attempt to get articles by pagination
       this.dispatchEvent(new CustomEvent('requestListArticles', {
         /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
-        detail: Object.assign({
+        detail: {
           offset: (Number(event.target.textContent) - 1) * Environment.articlesPerPageLimit,
-          showYourFeed: this.showYourFeed
-        }, this.tag ? { tag: this.tag } : {}),
+          showYourFeed: this.showYourFeed,
+          tag: this.tag,
+          author: this.author,
+          favorited: this.favorited
+        },
         bubbles: true,
         cancelable: true,
         composed: true
@@ -57,7 +66,10 @@ export default class Pagination extends HTMLElement {
     // on every connect it will attempt to get newest articles
     this.dispatchEvent(new CustomEvent('requestListArticles', {
       /** @type {import("../controllers/Article.js").RequestListArticlesEventDetail} */
-      detail: {},
+      detail: {
+        author: this.getAttribute('author') || '',
+        favorited: this.getAttribute('favorited') || ''
+      },
       bubbles: true,
       cancelable: true,
       composed: true
@@ -83,13 +95,17 @@ export default class Pagination extends HTMLElement {
       } else {
         // save the tag for further pagination requests
         this.tag = query.tag || ''
+        this.author = query.author || ''
+        this.favorited = query.favorited || ''
         this.showYourFeed = query.showYourFeed || false
         const offset = query.offset || 0
         let pageItems = ''
+        let counter = 0
         for (let i = 0; i < Math.ceil(multipleArticles.articlesCount / Environment.articlesPerPageLimit); ++i) {
           pageItems += `<li class="page-item ${i === offset / Environment.articlesPerPageLimit ? 'active' : ''}"><a class="page-link" href="">${i + 1}</a></li>`
+          counter++
         }
-        this.innerHTML = `
+        if (counter > 1) this.innerHTML = `
           <nav>
             <ul class="pagination">
               ${pageItems}
