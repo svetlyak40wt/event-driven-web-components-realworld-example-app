@@ -89,7 +89,6 @@ export default class Article extends HTMLElement {
    * @return {any}
    */
   render (profile = this.profile, user = this.user) {
-    console.log('changed', profile, user)
     if (user) this.user = user
     if (profile) this.profile = profile
     if (!profile) return (this.innerHTML = '<div class="profile-page">An error occurred fetching the profile!</div>')
