@@ -111,7 +111,11 @@ export default class Article extends HTMLElement {
               ...Environment.fetchHeaders,
               body: JSON.stringify(event.detail.body),
               signal: this.abortController.signal
-            }).then(response => response.json())
+            })
+            .then(response => {
+              if (response.status >= 200 && response.status <= 299) return response.json()
+              throw new Error(response.statusText)
+            })
             .then(data => {
               if (data.errors) throw data.errors
               self.location.hash = `#/articles/${data.article.slug}`

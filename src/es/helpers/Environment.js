@@ -85,9 +85,16 @@ class EnvironmentClass {
    * get page slug
    */
   get slug () {
-    const urlEnding = location.hash.match(/[^/]+$/)
+    const urlEnding = this.urlEnding
     if (urlEnding && urlEnding[0].match(/.*-[a-z0-9]{6}$/)) return urlEnding[0]
     return null
+  }
+
+  /**
+   * get url ending
+   */
+  get urlEnding () {
+    return location.hash.match(/[^/]+$/)
   }
 }
 // @ts-ignore
