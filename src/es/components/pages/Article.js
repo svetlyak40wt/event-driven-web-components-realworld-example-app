@@ -30,9 +30,9 @@ export default class Article extends HTMLElement {
      */
     this.userListener = event => {
       event.detail.fetch.then(user => {
-        this.username = user.username
+        this.user = user
       }).catch(error => {
-        this.username = undefined
+        this.user = undefined
         console.log(`Error@UserFetch: ${error}`)
       })
     }
@@ -69,11 +69,11 @@ export default class Article extends HTMLElement {
    * @return {void}
    */
   render (fetchSingleArticle) {
-    Promise.all([fetchSingleArticle, this.loadDependency()]).then(result => {
-      const [singleArticle, markdownit] = result
+    Promise.all([fetchSingleArticle, this.loadDependency(), this.loadChildComponents()]).then(result => {
+      const [singleArticle, markdownit, children] = result
       const article = singleArticle.article
       if (!article || !article.author || !article.tagList) return (this.innerHTML = '<div class="article-page">An error occurred rendering the article-page!</div>')
-      article.author = Object.assign(article.author, { self: this.username === article.author.username })
+      article.author = Object.assign(article.author, { self: this.user && this.user.username === article.author.username })
       this.innerHTML = `
         <div class="article-page">
 
@@ -110,61 +110,21 @@ export default class Article extends HTMLElement {
 
               <div class="col-xs-12 col-md-8 offset-md-2">
 
-                <form class="card comment-form">
-                  <div class="card-block">
-                    <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
-                  </div>
-                  <div class="card-footer">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-                    <button class="btn btn-sm btn-primary">
-                    Post Comment
-                    </button>
-                  </div>
-                </form>
-                <div class="card">
-                  <div class="card-block">
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  </div>
-                  <div class="card-footer">
-                    <a href="" class="comment-author">
-                      <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-                    </a>
-                    &nbsp;
-                    <a href="" class="comment-author">Jacob Schmidt</a>
-                    <span class="date-posted">Dec 29th</span>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-block">
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  </div>
-                  <div class="card-footer">
-                    <a href="" class="comment-author">
-                      <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-                    </a>
-                    &nbsp;
-                    <a href="" class="comment-author">Jacob Schmidt</a>
-                    <span class="date-posted">Dec 29th</span>
-                    <span class="mod-options">
-                      <i class="ion-edit"></i>
-                      <i class="ion-trash-a"></i>
-                    </span>
-                  </div>
-                </div>
+              ${this.user
+                ? `
+                  <c-comments><m-comments user-image=${this.user && this.user.image || ''} user-name=${this.user && this.user.username || ''}></m-comments></c-comments>
+                `
+                : '<div class="col-xs-12 col-md-8 offset-md-2"><div><a href="#/login">Sign in</a> or <a href="#/register">sign up</a> to add comments on this article. </div></div>'}
               </div>
             </div>
           </div>
         </div>
       `
-      this.loadChildComponents().then(children => {
-        /** @type {import("../atoms/ArticleMeta.js").default} */
-        // @ts-ignore
-
-        this.querySelectorAll('.article-meta').forEach(node => {
-          const articleMeta = new children[0][1](article, true)
-
-          node.replaceWith(articleMeta)
-        })
+      /** @type {import("../atoms/ArticleMeta.js").default} */
+      // @ts-ignore
+      this.querySelectorAll('.article-meta').forEach(node => {
+        const articleMeta = new children[0][1](article, true)
+        node.replaceWith(articleMeta)
       })
     // @ts-ignore
     }).catch(error => (this.innerHTML = console.warn(error) || '<div class="article-page">An error occurred fetching the article!</div>'))
@@ -180,6 +140,14 @@ export default class Article extends HTMLElement {
       import('../atoms/ArticleMeta.js').then(
         /** @returns {[string, CustomElementConstructor]} */
         module => ['a-article-meta', module.default]
+      ),
+      import('../controllers/Comments.js').then(
+        /** @returns {[string, CustomElementConstructor]} */
+        module => ['c-comments', module.default]
+      ),
+      import('../molecules/Comments.js').then(
+        /** @returns {[string, CustomElementConstructor]} */
+        module => ['m-comments', module.default]
       )
     ]).then(elements => {
       elements.forEach(element => {
