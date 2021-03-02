@@ -19,7 +19,7 @@ export default class Article extends HTMLElement {
 
     this.user = null
     this.profile = null
-    this.loading = /* html */`<div class="profile-page"><div class="user-info"><div class="container"><div class="row">Loading...</div></div></div></div>`
+    this.loading = /* html */'<div class="profile-page"><div class="user-info"><div class="container"><div class="row">Loading...</div></div></div></div>'
 
     this.profileListener = event => {
       event.detail.fetch.then(({ profile }) => { if (this.shouldComponentRender(profile, undefined)) this.render(profile, undefined) })

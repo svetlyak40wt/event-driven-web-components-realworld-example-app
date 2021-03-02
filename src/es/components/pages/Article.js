@@ -59,7 +59,7 @@ export default class Article extends HTMLElement {
       composed: true
     }))
     // show initial loading because there is no connectCallback render execution
-    if (!this.innerHTML) this.innerHTML = /* html */`<div class="article-page"><div class="banner"><div class="container">Loading...</div></div></div>`
+    if (!this.innerHTML) this.innerHTML = /* html */'<div class="article-page"><div class="banner"><div class="container">Loading...</div></div></div>'
   }
 
   disconnectedCallback () {
@@ -131,7 +131,7 @@ export default class Article extends HTMLElement {
 
                 ${user
                   ? `
-                    <c-comments><m-comments user-image=${user && user.image || ''} user-name=${user && user.username || ''}></m-comments></c-comments>
+                    <c-comments><m-comments user-image=${user && (user.image || '')} user-name=${user && (user.username || '')}></m-comments></c-comments>
                   `
                   : '<div class="col-xs-12 col-md-8 offset-md-2"><div><a href="#/login">Sign in</a> or <a href="#/register">sign up</a> to add comments on this article. </div></div>'}
                 </div>

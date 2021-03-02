@@ -20,7 +20,7 @@
     }} UserEventDetail
  */
 
- /**
+/**
  * https://github.com/gothinkster/realworld/tree/master/api#authentication
  *
  * @typedef {{

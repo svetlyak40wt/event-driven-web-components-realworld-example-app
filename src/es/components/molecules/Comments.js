@@ -1,6 +1,7 @@
 // @ts-check
 
 /* global CustomEvent */
+/* global customElements */
 /* global HTMLElement */
 
 /**
@@ -19,7 +20,7 @@ export default class Comments extends HTMLElement {
      *
      * @param {CustomEvent & {detail: import("../controllers/Comments.js").CommentsEventDetail}} event
      */
-    this.commentListener = event => event.detail.fetch.then(({comment}) => {
+    this.commentListener = event => event.detail.fetch.then(({ comment }) => {
       this.insertBefore(this.createComment(comment, false), this.firstCard)
       this.formControl.value = ''
     })
@@ -57,15 +58,17 @@ export default class Comments extends HTMLElement {
           card.remove()
         }
       } else {
-        if (this.formControl.value) this.dispatchEvent(new CustomEvent('addComments', {
+        if (this.formControl.value) {
+          this.dispatchEvent(new CustomEvent('addComments', {
           /** @type {import("../controllers/Comments.js").AddCommentsEventDetail} */
-          detail: {
-            body: this.formControl.value
-          },
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
+            detail: {
+              body: this.formControl.value
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        }
       }
     }
   }
@@ -119,7 +122,7 @@ export default class Comments extends HTMLElement {
         </div>
       </form>
     `
-    fetchComments && fetchComments.then(({comments}) => {
+    fetchComments && fetchComments.then(({ comments }) => {
       this.innerHTML += comments.reduce((commentsStr, comment) => (commentsStr += this.createComment(comment)), '')
     })
   }

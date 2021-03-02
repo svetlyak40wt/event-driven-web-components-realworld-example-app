@@ -33,7 +33,7 @@
     }} CommentsEventDetail
  */
 
- /**
+/**
  * https://github.com/gothinkster/realworld/tree/master/api#delete-comment
  *
  * @typedef {{ slug?: string, id: string }} DeleteCommentEventDetail
@@ -68,7 +68,7 @@ export default class Comments extends HTMLElement {
      */
     this.addCommentsListener = event => {
       // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
-      const slug = event.detail && event.detail.slug || Environment.slug || ''
+      const slug = event.detail && (event.detail.slug || Environment.slug || '')
       const url = `${Environment.fetchBaseUrl}articles/${slug}/comments`
       // reset old AbortController and assign new one
       if (this.abortController) this.abortController.abort()
@@ -79,7 +79,7 @@ export default class Comments extends HTMLElement {
         detail: {
           fetch: fetch(url, {
             method: 'POST',
-            body: JSON.stringify({comment:{body: event.detail.body}}),
+            body: JSON.stringify({ comment: { body: event.detail.body } }),
             signal: this.abortController.signal,
             ...Environment.fetchHeaders
           }).then(response => {
@@ -101,7 +101,7 @@ export default class Comments extends HTMLElement {
      */
     this.getCommentsListener = event => {
       // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
-      const slug = event.detail && event.detail.slug || Environment.slug || ''
+      const slug = event.detail && (event.detail.slug || Environment.slug || '')
       const url = `${Environment.fetchBaseUrl}articles/${slug}/comments`
       // reset old AbortController and assign new one
       if (this.abortController) this.abortController.abort()
@@ -132,7 +132,7 @@ export default class Comments extends HTMLElement {
      */
     this.deleteCommentListener = event => {
       // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
-      const slug = event.detail && event.detail.slug || Environment.slug || ''
+      const slug = event.detail && (event.detail.slug || Environment.slug || '')
       const url = `${Environment.fetchBaseUrl}articles/${slug}/comments/${event.detail.id}`
       // reset old AbortController and assign new one
       if (this.abortController) this.abortController.abort()
