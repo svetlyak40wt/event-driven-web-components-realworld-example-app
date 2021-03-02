@@ -16,6 +16,9 @@ export default class Article extends HTMLElement {
   constructor () {
     super()
 
+    this.user = null
+    this.fetchSingleArticle = null
+
     /**
      * Listens to the event name/typeArg: 'article'
      *
@@ -30,9 +33,9 @@ export default class Article extends HTMLElement {
      */
     this.userListener = event => {
       event.detail.fetch.then(user => {
-        this.user = user
+        if (this.shouldComponentRender(user)) this.render(undefined, user)
       }).catch(error => {
-        this.user = undefined
+        this.user = null
         console.log(`Error@UserFetch: ${error}`)
       })
     }
@@ -55,6 +58,8 @@ export default class Article extends HTMLElement {
       cancelable: true,
       composed: true
     }))
+    // show initial loading because there is no connectCallback render execution
+    if (!this.innerHTML) this.innerHTML = /* html */`<div class="article-page"><div class="banner"><div class="container">Loading...</div></div></div>`
   }
 
   disconnectedCallback () {
@@ -63,71 +68,86 @@ export default class Article extends HTMLElement {
   }
 
   /**
+   * evaluates if a render is necessary
+   *
+   * @param {import("../../helpers/Interfaces.js").User} [user = this.user]
+   * @return {boolean}
+   */
+  shouldComponentRender (user = this.user) {
+    return user !== this.user
+  }
+
+  /**
    * renders the article
    *
-   * @param {Promise<{article: import("../../helpers/Interfaces.js").SingleArticle}>} fetchSingleArticle
+   * @param {Promise<{article: import("../../helpers/Interfaces.js").SingleArticle}>} [fetchSingleArticle = this.fetchSingleArticle]
+   * @param {import("../../helpers/Interfaces.js").User} [user = this.user]
    * @return {void}
    */
-  render (fetchSingleArticle) {
-    Promise.all([fetchSingleArticle, this.loadDependency(), this.loadChildComponents()]).then(result => {
-      const [singleArticle, markdownit, children] = result
-      const article = singleArticle.article
-      if (!article || !article.author || !article.tagList) return (this.innerHTML = '<div class="article-page">An error occurred rendering the article-page!</div>')
-      article.author = Object.assign(article.author, { self: this.user && this.user.username === article.author.username })
-      this.innerHTML = `
-        <div class="article-page">
+  render (fetchSingleArticle = this.fetchSingleArticle, user = this.user) {
+    if (user) this.user = user
+    if (fetchSingleArticle) {
+      this.fetchSingleArticle = fetchSingleArticle
+      Promise.all([fetchSingleArticle, this.loadDependency(), this.loadChildComponents()]).then(result => {
+        const [singleArticle, markdownit, children] = result
+        const article = singleArticle.article
+        if (!article || !article.author || !article.tagList) return (this.innerHTML = '<div class="article-page">An error occurred rendering the article-page!</div>')
+        article.author = Object.assign(article.author, { self: user && user.username === article.author.username })
+        this.innerHTML = `
+          <div class="article-page">
 
-          <div class="banner">
-            <div class="container">
+            <div class="banner">
+              <div class="container">
 
-              <h1>${article.title}</h1>
+                <h1>${article.title}</h1>
 
-              <div class="article-meta"></div>
+                <div class="article-meta"></div>
 
-            </div>
-          </div>
-
-          <div class="container page">
-
-            <div class="row article-content">
-              <div class="col-md-12">
-                <div>${markdownit.render(article.body)}</div>
-                <ul class="tag-list">
-                  ${article.tagList.reduce((tagListStr, tag) => (tagListStr += `
-                    <li class="tag-default tag-pill tag-outline">${tag}</li>
-                  `), '')}
-                </ul>
               </div>
             </div>
 
-            <hr />
+            <div class="container page">
 
-            <div class="article-actions">
-              <div class="article-meta"></div>
-            </div>
+              <div class="row article-content">
+                <div class="col-md-12">
+                  <div>${markdownit.render(article.body)}</div>
+                  <ul class="tag-list">
+                    ${article.tagList.reduce((tagListStr, tag) => (tagListStr += `
+                      <li class="tag-default tag-pill tag-outline">${tag}</li>
+                    `), '')}
+                  </ul>
+                </div>
+              </div>
 
-            <div class="row">
+              <hr />
 
-              <div class="col-xs-12 col-md-8 offset-md-2">
+              <div class="article-actions">
+                <div class="article-meta"></div>
+              </div>
 
-              ${this.user
-                ? `
-                  <c-comments><m-comments user-image=${this.user && this.user.image || ''} user-name=${this.user && this.user.username || ''}></m-comments></c-comments>
-                `
-                : '<div class="col-xs-12 col-md-8 offset-md-2"><div><a href="#/login">Sign in</a> or <a href="#/register">sign up</a> to add comments on this article. </div></div>'}
+              <div class="row">
+
+                <div class="col-xs-12 col-md-8 offset-md-2">
+
+                ${user
+                  ? `
+                    <c-comments><m-comments user-image=${user && user.image || ''} user-name=${user && user.username || ''}></m-comments></c-comments>
+                  `
+                  : '<div class="col-xs-12 col-md-8 offset-md-2"><div><a href="#/login">Sign in</a> or <a href="#/register">sign up</a> to add comments on this article. </div></div>'}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      `
-      /** @type {import("../atoms/ArticleMeta.js").default} */
-      // @ts-ignore
-      this.querySelectorAll('.article-meta').forEach(node => {
-        const articleMeta = new children[0][1](article, true)
-        node.replaceWith(articleMeta)
-      })
-    // @ts-ignore
-    }).catch(error => (this.innerHTML = console.warn(error) || '<div class="article-page">An error occurred fetching the article!</div>'))
+        `
+        /** @type {import("../atoms/ArticleMeta.js").default} */
+        // @ts-ignore
+        this.querySelectorAll('.article-meta').forEach(node => {
+          const articleMeta = new children[0][1](article, true)
+          node.replaceWith(articleMeta)
+        })
+        // @ts-ignore
+      }).catch(error => (this.innerHTML = console.warn(error) || '<div class="article-page">An error occurred fetching the article!</div>'))
+    }
   }
 
   /**

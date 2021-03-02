@@ -8,9 +8,35 @@
 /**
  * https://github.com/gothinkster/realworld/tree/master/api#add-comments-to-an-article
  *
+ * @typedef {{ slug?: string, body: string }} AddCommentsEventDetail
+ */
+
+/**
+ * https://github.com/gothinkster/realworld/tree/master/api#add-comments-to-an-article
+ *
  * @typedef {{
-      fetch: Promise<import("../../helpers/Interfaces.js").MultipleTags>
-    }} TagsEventDetail
+  fetch: Promise<import("../../helpers/Interfaces.js").SingleComment>
+}} CommentEventDetail
+*/
+
+/**
+ * https://github.com/gothinkster/realworld/tree/master/api#get-comments-from-an-article
+ *
+ * @typedef {{ slug?: string }} GetCommentsEventDetail
+ */
+
+/**
+ * https://github.com/gothinkster/realworld/tree/master/api#get-comments-from-an-article
+ *
+ * @typedef {{
+      fetch: Promise<import("../../helpers/Interfaces.js").MultipleComments>
+    }} CommentsEventDetail
+ */
+
+ /**
+ * https://github.com/gothinkster/realworld/tree/master/api#delete-comment
+ *
+ * @typedef {{ slug?: string, id: string }} DeleteCommentEventDetail
  */
 
 import { Environment } from '../../helpers/Environment.js'
@@ -36,11 +62,44 @@ export default class Comments extends HTMLElement {
     this.abortController = null
 
     /**
-     * Listens to the event name/typeArg: 'Comments'
+     * Listens to the event name/typeArg: 'addComments'
      *
-     * @param {CustomEvent} event
+     * @param {CustomEvent & {detail: AddCommentsEventDetail}} event
      */
-    this.commentsListener = event => {
+    this.addCommentsListener = event => {
+      // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
+      const slug = event.detail && event.detail.slug || Environment.slug || ''
+      const url = `${Environment.fetchBaseUrl}articles/${slug}/comments`
+      // reset old AbortController and assign new one
+      if (this.abortController) this.abortController.abort()
+      this.abortController = new AbortController()
+      // answer with event
+      this.dispatchEvent(new CustomEvent('comment', {
+        /** @type {CommentEventDetail} */
+        detail: {
+          fetch: fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({comment:{body: event.detail.body}}),
+            signal: this.abortController.signal,
+            ...Environment.fetchHeaders
+          }).then(response => {
+            if (response.status >= 200 && response.status <= 299) return response.json()
+            throw new Error(response.statusText)
+          // @ts-ignore
+          })
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
+
+    /**
+     * Listens to the event name/typeArg: 'getComments'
+     *
+     * @param {CustomEvent & {detail: GetCommentsEventDetail}} event
+     */
+    this.getCommentsListener = event => {
       // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
       const slug = event.detail && event.detail.slug || Environment.slug || ''
       const url = `${Environment.fetchBaseUrl}articles/${slug}/comments`
@@ -49,7 +108,7 @@ export default class Comments extends HTMLElement {
       this.abortController = new AbortController()
       // answer with event
       this.dispatchEvent(new CustomEvent('comments', {
-        /** @type {TagsEventDetail} */
+        /** @type {CommentsEventDetail} */
         detail: {
           fetch: fetch(url, {
             signal: this.abortController.signal,
@@ -65,13 +124,40 @@ export default class Comments extends HTMLElement {
         composed: true
       }))
     }
+
+    /**
+     * Listens to the event name/typeArg: 'deleteComment'
+     *
+     * @param {CustomEvent & {detail: DeleteCommentEventDetail}} event
+     */
+    this.deleteCommentListener = event => {
+      // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
+      const slug = event.detail && event.detail.slug || Environment.slug || ''
+      const url = `${Environment.fetchBaseUrl}articles/${slug}/comments/${event.detail.id}`
+      // reset old AbortController and assign new one
+      if (this.abortController) this.abortController.abort()
+      this.abortController = new AbortController()
+      fetch(url, {
+        method: 'DELETE',
+        signal: this.abortController.signal,
+        ...Environment.fetchHeaders
+      }).then(response => {
+        if (response.status >= 200 && response.status <= 299) return
+        throw new Error(response.statusText)
+      // @ts-ignore
+      })
+    }
   }
 
   connectedCallback () {
-    this.addEventListener('getComments', this.commentsListener)
+    this.addEventListener('addComments', this.addCommentsListener)
+    this.addEventListener('getComments', this.getCommentsListener)
+    this.addEventListener('deleteComment', this.deleteCommentListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('getComments', this.commentsListener)
+    this.removeEventListener('addComments', this.addCommentsListener)
+    this.removeEventListener('getComments', this.getCommentsListener)
+    this.removeEventListener('deleteComment', this.deleteCommentListener)
   }
 }
