@@ -66,7 +66,7 @@ export default class Comments extends HTMLElement {
      *
      * @param {CustomEvent & {detail: AddCommentsEventDetail}} event
      */
-    this.addCommentsListener = event => {
+    this.addCommentListener = event => {
       // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
       const slug = (event.detail && event.detail.slug) || Environment.slug || ''
       const url = `${Environment.fetchBaseUrl}articles/${slug}/comments`
@@ -146,13 +146,13 @@ export default class Comments extends HTMLElement {
   }
 
   connectedCallback () {
-    this.addEventListener('addComments', this.addCommentsListener)
+    this.addEventListener('addComments', this.addCommentListener)
     this.addEventListener('getComments', this.getCommentsListener)
     this.addEventListener('deleteComment', this.deleteCommentListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('addComments', this.addCommentsListener)
+    this.removeEventListener('addComments', this.addCommentListener)
     this.removeEventListener('getComments', this.getCommentsListener)
     this.removeEventListener('deleteComment', this.deleteCommentListener)
   }

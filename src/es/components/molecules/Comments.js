@@ -157,27 +157,6 @@ export default class Comments extends HTMLElement {
     return div.children[0]
   }
 
-  /**
-   * fetch children when first needed
-   *
-   * @returns {Promise<[string, CustomElementConstructor][]>}
-   */
-  loadChildComponents () {
-    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../controllers/Comments').then(
-        /** @returns {[string, CustomElementConstructor]} */
-        module => ['c-comments', module.default]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // don't define already existing customElements
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
-  }
-
   get formControl () {
     return this.querySelector('.form-control')
   }
