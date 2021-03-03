@@ -16,7 +16,7 @@ export default class Comments extends HTMLElement {
     super()
 
     /**
-     * Listens to the event name/typeArg: 'comments'
+     * Listens to the event name/typeArg: 'comment'
      *
      * @param {CustomEvent & {detail: import("../controllers/Comments.js").CommentsEventDetail}} event
      */
@@ -26,7 +26,7 @@ export default class Comments extends HTMLElement {
     })
 
     /**
-     * Listens to the event name/typeArg: 'comment'
+     * Listens to the event name/typeArg: 'comments'
      * which is returned when adding a comment
      *
      * @param {CustomEvent & {detail: import("../controllers/Comments.js").CommentEventDetail}} event

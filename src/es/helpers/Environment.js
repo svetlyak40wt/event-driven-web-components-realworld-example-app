@@ -86,7 +86,7 @@ class EnvironmentClass {
    */
   get slug () {
     const urlEnding = this.urlEnding
-    if (urlEnding && urlEnding[0].match(/.*-[a-z0-9]{6}$/)) return urlEnding[0]
+    if (urlEnding && urlEnding[0].match(/.*-[a-z0-9]{3,10}$/)) return urlEnding[0]
     return null
   }
 

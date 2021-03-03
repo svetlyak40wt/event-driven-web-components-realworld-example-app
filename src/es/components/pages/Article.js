@@ -35,7 +35,7 @@ export default class Article extends HTMLElement {
       event.detail.fetch.then(user => {
         if (this.shouldComponentRender(user)) this.render(undefined, user)
       }).catch(error => {
-        this.user = null
+        if (this.shouldComponentRender(null)) this.render(undefined, null)
         console.log(`Error@UserFetch: ${error}`)
       })
     }
@@ -65,6 +65,8 @@ export default class Article extends HTMLElement {
   disconnectedCallback () {
     document.body.removeEventListener('article', this.articleListener)
     document.body.removeEventListener('user', this.userListener)
+    // looks nicer when cleared
+    this.innerHTML = ''
   }
 
   /**
