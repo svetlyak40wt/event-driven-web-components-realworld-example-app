@@ -149,7 +149,7 @@ export default class ArticleFeedToggle extends HTMLElement {
           ${active === 2 ? `
             <li class="nav-item">
               <a href="#/" class="nav-link active">
-                <i class="ion-pound"></i>${this.query.tag}
+                <i class="ion-pound"></i> ${this.query.tag}
               </a>
             </li>
           ` : ''}

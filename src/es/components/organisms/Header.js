@@ -14,20 +14,20 @@ export default class Header extends HTMLElement {
   constructor () {
     super()
 
-    this.username = null
+    this.user = null
     /**
-     * Listens to the event name/typeArg: 'article'
+     * Listens to the event name/typeArg: 'user'
      *
      * @param {CustomEvent & {detail: import("../controllers/User.js").UserEventDetail}} event
      */
     this.userListener = event => {
       event.detail.fetch.then(user => {
-        if (this.shouldComponentRender(user.username)) this.render(user.username)
-        this.username = user.username
+        if (this.shouldComponentRender(user)) this.render(user)
+        this.user = user
       }).catch(error => {
         console.log(`Error@UserFetch: ${error}`)
         if (this.shouldComponentRender(null)) this.render(null)
-        this.username = null
+        this.user = null
       })
     }
   }
@@ -49,20 +49,20 @@ export default class Header extends HTMLElement {
   /**
    * evaluates if a render is necessary
    *
-   * @param {string} username
+   * @param {import("../../helpers/Interfaces.js").User} user
    * @return {boolean}
    */
-  shouldComponentRender (username) {
-    return this.username !== username
+  shouldComponentRender (user) {
+    return this.user !== user
   }
 
   /**
    * renders the header within the body, which is in this case the navbar
    *
-   * @param {string} [username = undefined]
+   * @param {import("../../helpers/Interfaces.js").User} [user = undefined]
    * @return {void}
    */
-  render (username) {
+  render (user) {
     this.innerHTML = /* html */ `
       <nav class="navbar navbar-light">
         <div class="container">
@@ -72,7 +72,7 @@ export default class Header extends HTMLElement {
               <!-- Add "active" class when you're on that page" -->
               <a class="nav-link active" href="#/">Home</a>
             </li>
-            ${username ? /* html */ `
+            ${user ? /* html */ `
               <li class="nav-item">
                 <a class="nav-link" href="#/editor">
                   <i class="ion-compose"></i>&nbsp;New Post
@@ -84,8 +84,9 @@ export default class Header extends HTMLElement {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#/profile/${username}">
-                  ${username}
+                <a class="nav-link" href="#/profile/${user.username}">
+                  <img class="user-pic" src="${user.image}">
+                  ${user.username}
                 </a>
               </li>`
               : /* html */ `

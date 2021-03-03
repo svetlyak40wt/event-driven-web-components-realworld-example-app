@@ -71,6 +71,8 @@ export default class Article extends HTMLElement {
     document.body.removeEventListener('profile', this.profileListener)
     document.body.removeEventListener('user', this.userListener)
     if (this.btnFollow) this.btnFollow.removeEventListener('click', this.followBtnListener)
+    // looks nicer when cleared
+    this.innerHTML = ''
   }
 
   /**
