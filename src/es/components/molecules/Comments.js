@@ -1,8 +1,9 @@
 // @ts-check
 
 /* global CustomEvent */
-/* global customElements */
 /* global HTMLElement */
+
+import { secureImageSrc } from '../../helpers/Utils.js'
 
 /**
  * https://github.com/Weedshaker/event-driven-web-components-realworld-example-app/blob/master/FRONTEND_INSTRUCTIONS.md#home
@@ -115,7 +116,7 @@ export default class Comments extends HTMLElement {
           <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
         </div>
         <div class="card-footer">
-          <img src="${this.getAttribute('user-image') || ''}" class="comment-author-img" />
+          <img src="${secureImageSrc(this.getAttribute('user-image')) || ''}" class="comment-author-img" />
           <button class="btn btn-sm btn-primary">
           Post Comment
           </button>
@@ -142,7 +143,7 @@ export default class Comments extends HTMLElement {
         </div>
         <div class="card-footer">
           <a href="" class="comment-author">
-            <img src="${comment.author.image}" class="comment-author-img" />
+            <img src="${secureImageSrc(comment.author.image)}" class="comment-author-img" />
           </a>
           &nbsp;
           <a href="#/profile/${comment.author.username}" class="comment-author">${comment.author.username}</a>

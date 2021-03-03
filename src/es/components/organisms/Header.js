@@ -3,6 +3,8 @@
 /* global CustomEvent */
 /* global HTMLElement */
 
+import { secureImageSrc } from '../../helpers/Utils.js'
+
 /**
  * https://github.com/Weedshaker/event-driven-web-components-realworld-example-app/blob/master/FRONTEND_INSTRUCTIONS.md#header
  * As an organism, this component shall hold molecules and/or atoms
@@ -85,7 +87,7 @@ export default class Header extends HTMLElement {
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#/profile/${user.username}">
-                  <img class="user-pic" src="${user.image}">
+                  <img class="user-pic" src="${secureImageSrc(user.image)}">
                   ${user.username}
                 </a>
               </li>`

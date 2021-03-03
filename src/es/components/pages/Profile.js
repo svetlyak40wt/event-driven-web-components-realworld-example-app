@@ -1,6 +1,7 @@
 // @ts-check
 
 import { Environment } from '../../helpers/Environment.js'
+import { secureImageSrc } from '../../helpers/Utils.js'
 
 /* global HTMLElement */
 /* global customElements */
@@ -105,7 +106,7 @@ export default class Article extends HTMLElement {
           <div class="row">
 
             <div class="col-xs-12 col-md-10 offset-md-1">
-              <img src="${profile.image}" class="user-img" />
+              <img src="${secureImageSrc(profile.image)}" class="user-img" />
               <h4>${profile.username}</h4>
               <p>
               ${profile.bio || ''}
