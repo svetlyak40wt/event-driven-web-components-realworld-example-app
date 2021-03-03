@@ -6,19 +6,27 @@
 /* global fetch */
 
 /**
- * https://github.com/gothinkster/realworld/tree/master/api#get-article
+ * https://github.com/gothinkster/realworld/tree/master/api#authentication
  *
  * @typedef {{ email: string, password: string }} loginUserEventDetail
  */
 
 /**
- * https://github.com/gothinkster/realworld/tree/master/api#single-article
+ * https://github.com/gothinkster/realworld/tree/master/api#authentication
  *
  * @typedef {{
       fetch: Promise<import("../../helpers/Interfaces.js").User>
       updated?: Boolean
     }} UserEventDetail
  */
+
+/**
+ * https://github.com/gothinkster/realworld/tree/master/api#authentication
+ *
+ * @typedef {{
+  fetch: Promise<import("../../helpers/Interfaces.js").Profile>
+}} ProfileEventDetail
+*/
 
 import { Environment } from '../../helpers/Environment.js'
 
@@ -215,6 +223,7 @@ export default class User extends HTMLElement {
 
       const url = `${Environment.fetchBaseUrl}profiles/${event.detail.username}`
       this.dispatchEvent(new CustomEvent('profile', {
+        /** @type {ProfileEventDetail} */
         detail: {
           fetch: fetch(url,
             {

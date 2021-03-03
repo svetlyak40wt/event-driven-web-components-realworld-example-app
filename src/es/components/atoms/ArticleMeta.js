@@ -18,12 +18,12 @@ export default class ArticleMeta extends HTMLElement {
    *
    * @param {import("../../helpers/Interfaces.js").SingleArticle | null} [article = null]
    */
-  constructor (article = null, actions = false) {
+  constructor (article = null, hasActions = false) {
     super()
 
     // allow innerHTML ArticleMeta with article as a string attribute
     this.article = article || JSON.parse((this.getAttribute('article') || '').replace(/'/g, '"') || '{}')
-    this.actions = actions
+    this.hasActions = hasActions
 
     /**
      * Listens to the event name/typeArg: 'getArticle'
@@ -34,17 +34,9 @@ export default class ArticleMeta extends HTMLElement {
       if (article.slug === this.article.slug) this.render(article)
     })
 
-    /**
-     * target button or button's only child <i> click to dispatch a CustomEvent setFavorite, which expects a Promise.resolve(new article) as a response
-     *
-     * @param {event & {target: HTMLElement}} event
-     * @return {Promise<import("../../helpers/Interfaces.js").SingleArticle | false> | false}
-     */
-
     this.favoriteBtnListener = event => {
       if (!event.target) return false
       event.preventDefault()
-
       this.dispatchEvent(new CustomEvent('setFavorite', {
         /** @type {import("../controllers/MetaActions.js").SetFavoriteEventDetail} */
         detail: {
@@ -122,7 +114,7 @@ export default class ArticleMeta extends HTMLElement {
           <span class="date">${new Date(article.createdAt).toDateString()}</span>
         </div>
 
-        ${this.actions
+        ${this.hasActions
           ? article.author.self
             ? `<a class="btn btn-outline-secondary btn-sm" href="#/editor/${article.slug}">
             <i class="ion-edit"></i>Edit Article</a>

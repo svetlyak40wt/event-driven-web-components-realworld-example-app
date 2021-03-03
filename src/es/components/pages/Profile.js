@@ -19,6 +19,7 @@ export default class Article extends HTMLElement {
 
     this.user = null
     this.profile = null
+    this.loading = /* html */'<div class="profile-page"><div class="user-info"><div class="container"><div class="row">Loading...</div></div></div></div>'
 
     this.profileListener = event => {
       event.detail.fetch.then(({ profile }) => { if (this.shouldComponentRender(profile, undefined)) this.render(profile, undefined) })
@@ -62,6 +63,8 @@ export default class Article extends HTMLElement {
       cancelable: true,
       composed: true
     }))
+    // show initial loading because there is no connectCallback render execution
+    if (!this.innerHTML) this.innerHTML = this.loading
   }
 
   disconnectedCallback () {
@@ -91,7 +94,7 @@ export default class Article extends HTMLElement {
   render (profile = this.profile, user = this.user) {
     if (user) this.user = user
     if (profile) this.profile = profile
-    if (!profile) return (this.innerHTML = '<div class="profile-page">An error occurred fetching the profile!</div>')
+    if (!profile) return (this.innerHTML = this.user ? this.loading : '<div class="profile-page">An error occurred fetching the profile!</div>')
     this.innerHTML = /* html */`
     <div class="profile-page">
 
