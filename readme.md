@@ -51,10 +51,3 @@ For more information on how to this works with other frontends/backends, head ov
 
 ## Event Driven Vanilla JS Web Components (95)
 ![event-driven-web-components-realworld-example-app](./images/event-driven-web-components-realworld-example-app.png)
-
-## TODO
-
-1. header/profile
-2. otherUser/profile
-3. article/comments etc.
-4. clean error handling at controller level (linter is complaining if there are no error handlings)
