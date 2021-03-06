@@ -26,7 +26,7 @@ export default class Test {
     const results = document.createElement('div')
     results.innerHTML = `
       <div>
-        <a name=${name}></a>
+        <a name="${name}"></a>
         <h2>Results: ${name}</h2>
         <div class=result></div>
       </div>

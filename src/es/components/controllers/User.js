@@ -194,7 +194,7 @@ export default class User extends HTMLElement {
               return data.user
             })
             .catch(error => {
-              if (!error.toString().includes('abort')) Environment.token = ''
+              if (error && typeof error.toString === 'function' && !error.toString().includes('aborted')) Environment.token = ''
               console.log(`Error@UserFetch: ${error}`)
             }) : Promise.reject(new Error('No token found'))
         },

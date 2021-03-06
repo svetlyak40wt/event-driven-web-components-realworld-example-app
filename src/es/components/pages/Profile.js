@@ -134,12 +134,12 @@ export default class Article extends HTMLElement {
           <div class="col-xs-12 col-md-10 offset-md-1">
 
             <div class="articles-toggle">
-              <m-article-feed-toggle favorited=${profile.username} author=${profile.username} itsMe=${user.username === profile.username ? 'true' : ''}></m-article-feed-toggle>
+              <m-article-feed-toggle favorited="${profile.username}" author="${profile.username}" itsMe=${user && user.username === profile.username ? 'true' : ''}></m-article-feed-toggle>
             </div>
 
             <o-list-article-previews><div class="article-preview">Loading...</div></o-list-article-previews>
 
-            <m-pagination author=${profile.username}></m-pagination>
+            <m-pagination author="${profile.username}"></m-pagination>
 
           </div>
 
