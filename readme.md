@@ -15,11 +15,12 @@ For more information on how to this works with other frontends/backends, head ov
 
 # How it works
 
-> Frontend Event Driven Architecture works basically like the DOM itself. There are loosely coupled components (nodes), which emmit events and those get captured by controllers called stores, routers, etc.
+> Frontend Event Driven Architecture works basically like the DOM itself. There are loosely coupled components (nodes), which emmit events and those get captured by controllers also called stores, routers, etc. Those controllers emmit events on their behalf, which the components can consume.
 
 # Getting started
 
-> Simply open the index.html on a local or remote web server like, node, apache, nginx, etc.
+> Simply open the src/index.html on a local or remote web server like, node [live-server](https://www.npmjs.com/package/live-server), apache, nginx, xampp, etc.
+> Tests: Open the test/index.html
 
 # Diagrams
 
@@ -31,6 +32,8 @@ For more information on how to this works with other frontends/backends, head ov
 # Explanations
 
 * **ShadowDOM**'s mostly shine when encapsulating CSS. But the Conduit example has one global CSS Stylesheet and for that reason, it is more efficient not to have shadowDOM's, which all would have to import that global CSS separately. Note: The biggest strength of Web Components is their shadowDOM, means in a real life examples you would share general CSS styles through CSS variables and have specific styles on each component in their respective shadowDOM. This will improve performance, since the DOM renderer only needs to respect certain CSS for certain nodes/shadowDOM's. There is a good helper Class, which you can use to simply add CSS with the lines: ```this.css = '...' ``` and to avoid resetting nodes with innerHTML, it includes a function: ```this.html = '' ```. Overall, this prototype Class helps you to easily and comfortably deal with the ShadowDOM. Have a look at: [mits-gossau/web-components *(work in progress)*](https://github.com/mits-gossau/web-components/blob/master/src/es/components/prototypes/Shadow.js)
+
+* **Dependencie**'s: This application uses ZERO production dependencies. One devDependency is used for linting, see the package.json for further details.
 
 # Lighthouse Audits
 
@@ -48,3 +51,9 @@ For more information on how to this works with other frontends/backends, head ov
 
 ## Event Driven Vanilla JS Web Components (95)
 ![event-driven-web-components-realworld-example-app](./images/event-driven-web-components-realworld-example-app.png)
+
+# Contributions
+
+* [TailorMadeCode](https://github.com/tailormadecode) Components Development
+* [V4L3](https://github.com/V4L3) Components Development
+* [Weedshaker](https://github.com/Weedshaker) Architecture, Tests &  Components Development
