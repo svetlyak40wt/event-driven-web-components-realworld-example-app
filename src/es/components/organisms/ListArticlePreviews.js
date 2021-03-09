@@ -61,9 +61,10 @@ export default class ListArticlePreviews extends HTMLElement {
           const articlePreview = new children[0][1](article)
           this.appendChild(articlePreview)
         })
+        if (!this.getAttribute('no-scroll')) this.scrollToEl(this)
       }
     // @ts-ignore
-    }).catch(error => (this.innerHTML = console.warn(error) || '<div class="article-preview">An error occurred fetching the articles!</div>'))
+    }).catch(error => (this.innerHTML = console.warn(error) || (error && typeof error.toString === 'function' && error.toString().includes('aborted') ? '<div class="article-preview">Loading...</div>' : '<div class="article-preview">An error occurred fetching the articles!</div>')))
   }
 
   /**
@@ -85,5 +86,12 @@ export default class ListArticlePreviews extends HTMLElement {
       })
       return elements
     }))
+  }
+
+  // inspired from: https://github.com/Weedshaker/PeerWebSite/blob/master/JavaScript/js/Player/Player.js
+  scrollToEl (el) {
+    const rect = el.getBoundingClientRect()
+    // check if the element is outside the viewport, otherwise don't scroll
+    if (rect && rect.top < 0) el.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' })
   }
 }

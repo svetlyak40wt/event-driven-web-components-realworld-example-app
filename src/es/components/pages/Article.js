@@ -133,7 +133,7 @@ export default class Article extends HTMLElement {
 
                 ${user
                   ? `
-                    <c-comments><m-comments user-image=${user && (user.image || '')} user-name=${user && (user.username || '')}></m-comments></c-comments>
+                    <c-comments><m-comments user-image="${user && (user.image || '')}" user-name="${user && (user.username || '')}"></m-comments></c-comments>
                   `
                   : '<div class="col-xs-12 col-md-8 offset-md-2"><div><a href="#/login">Sign in</a> or <a href="#/register">sign up</a> to add comments on this article. </div></div>'}
                 </div>
@@ -148,7 +148,7 @@ export default class Article extends HTMLElement {
           node.replaceWith(articleMeta)
         })
         // @ts-ignore
-      }).catch(error => (this.innerHTML = console.warn(error) || '<div class="article-page">An error occurred fetching the article!</div>'))
+      }).catch(error => (this.innerHTML = console.warn(error) || (error && typeof error.toString === 'function' && error.toString().includes('aborted') ? '<div class="article-page">Loading...</div>' : '<div class="article-page">An error occurred fetching the article!</div>')))
     }
   }
 

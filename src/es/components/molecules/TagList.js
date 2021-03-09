@@ -69,6 +69,6 @@ export default class TagList extends HTMLElement {
       if (!tag || !tag.tags || !tag.tags.length) tag = { tags: ['No tags are here... yet.'] }
       this.innerHTML = `<div class="tag-list">${tag.tags.map(tag => `<a href="#/" class="tag-pill tag-default">${tag}</a>`).join('')}</div>`
     // @ts-ignore
-    }).catch(error => (this.innerHTML = console.warn(error) || '<div class="tag-list">An error occurred fetching the tags!</div>'))
+    }).catch(error => (this.innerHTML = console.warn(error) || (error && typeof error.toString === 'function' && error.toString().includes('aborted') ? '<div class="tag-list">Loading...</div>' : '<div class="tag-list">An error occurred fetching the tags!</div>')))
   }
 }
