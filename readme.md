@@ -35,6 +35,8 @@ For more information on how to this works with other frontends/backends, head ov
 
 * **Dependencie**'s: This application uses ZERO production dependencies. One devDependency is used for linting, see the package.json for further details.
 
+* **Size**: 35 items, totalling 143.1 kB uncompressed
+
 ## Lighthouse Audits
 
 ### [React / Redux (81)](https://github.com/gothinkster/react-redux-realworld-example-app)
