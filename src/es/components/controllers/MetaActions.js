@@ -18,7 +18,8 @@ import { Environment } from '../../helpers/Environment.js'
 /**
  * https://github.com/gothinkster/realworld/tree/master/api#favorite-article
  * As a controller, this component becomes a store and organizes events
- * dispatches: triggers detail.resolve function with returned article on 'setFavorite'
+ * dispatches: 'article' on 'setFavorite'
+ * dispatches: 'article' or 'profile' on 'followUser'
  *
  * @export
  * @class Favorite

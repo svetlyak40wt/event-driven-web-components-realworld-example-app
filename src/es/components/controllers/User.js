@@ -33,9 +33,12 @@ import { Environment } from '../../helpers/Environment.js'
 /**
  * https://github.com/gothinkster/realworld/tree/master/api#get-article
  * As a controller, this component becomes a store and organizes events
- * dispatches: 'user' on 'registerUser'
  * dispatches: 'user' on 'loginUser'
+ * dispatches: 'user' on 'registerUser'
+ * dispatches: 'user' on 'updateUser'
  * dispatches: 'user' on 'getUser'
+ * dispatches: 'user' (reject) on 'logoutUser'
+ * dispatches: 'profile' on 'getProfile'
  *
  * @export
  * @class User

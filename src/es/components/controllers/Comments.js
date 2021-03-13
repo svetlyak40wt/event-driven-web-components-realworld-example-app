@@ -44,7 +44,9 @@ import { Environment } from '../../helpers/Environment.js'
 /**
  * https://github.com/gothinkster/realworld/tree/master/api#add-comments-to-an-article
  * As a controller, this component becomes a store and organizes events
- * dispatches: 'getComments' on 'Comments'
+ * dispatches: 'comment' on 'addComment'
+ * dispatches: 'comments' on 'getComments'
+ * does nothing on 'deleteComment'
  *
  * @export
  * @class Comments

@@ -49,6 +49,9 @@ import { Environment } from '../../helpers/Environment.js'
  * https://github.com/gothinkster/realworld/tree/master/api#get-article
  * As a controller, this component becomes a store and organizes events
  * dispatches: 'article' on 'requestArticle'
+ * dispatches: 'article' on 'postArticle'
+ * reroutes to home on 'deleteArticle'
+ * dispatches: 'listArticles' on 'requestListArticles'
  *
  * @export
  * @class Article
