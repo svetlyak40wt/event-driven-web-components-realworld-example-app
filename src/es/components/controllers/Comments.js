@@ -62,7 +62,7 @@ export default class Comments extends HTMLElement {
     this.abortController = null
 
     /**
-     * Listens to the event name/typeArg: 'addComments'
+     * Listens to the event name/typeArg: 'addComment'
      *
      * @param {CustomEvent & {detail: AddCommentsEventDetail}} event
      */
@@ -146,13 +146,13 @@ export default class Comments extends HTMLElement {
   }
 
   connectedCallback () {
-    this.addEventListener('addComments', this.addCommentListener)
+    this.addEventListener('addComment', this.addCommentListener)
     this.addEventListener('getComments', this.getCommentsListener)
     this.addEventListener('deleteComment', this.deleteCommentListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('addComments', this.addCommentListener)
+    this.removeEventListener('addComment', this.addCommentListener)
     this.removeEventListener('getComments', this.getCommentsListener)
     this.removeEventListener('deleteComment', this.deleteCommentListener)
   }

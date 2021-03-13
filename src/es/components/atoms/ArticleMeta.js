@@ -30,7 +30,7 @@ export default class ArticleMeta extends HTMLElement {
      *
      * @param {CustomEvent & {detail: import("../controllers/Article.js").ArticleEventDetail}} event
      */
-    this.getArticleListener = event => event.detail.fetch.then(({ article }) => {
+    this.articleListener = event => event.detail.fetch.then(({ article }) => {
       if (article.slug === this.article.slug) this.render(article)
     })
 
@@ -78,12 +78,12 @@ export default class ArticleMeta extends HTMLElement {
   }
 
   connectedCallback () {
-    document.body.addEventListener('article', this.getArticleListener)
+    document.body.addEventListener('article', this.articleListener)
     if (this.shouldComponentRender()) this.render(this.article)
   }
 
   disconnectedCallback () {
-    document.body.removeEventListener('article', this.getArticleListener)
+    document.body.removeEventListener('article', this.articleListener)
     if (this.btnFavorite) this.btnFavorite.removeEventListener('click', this.favoriteBtnListener)
     if (this.btnFollow) this.btnFollow.removeEventListener('click', this.followBtnListener)
     if (this.btnDelete) this.btnDelete.removeEventListener('click', this.deleteBtnListener)

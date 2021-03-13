@@ -60,7 +60,7 @@ export default class Comments extends HTMLElement {
         }
       } else {
         if (this.formControl.value) {
-          this.dispatchEvent(new CustomEvent('addComments', {
+          this.dispatchEvent(new CustomEvent('addComment', {
           /** @type {import("../controllers/Comments.js").AddCommentsEventDetail} */
             detail: {
               body: this.formControl.value

@@ -70,7 +70,7 @@ export default class Article extends HTMLElement {
      *
      * @param {CustomEvent & {detail: RequestArticleEventDetail}} event
      */
-    this.requestGetArticleListener = event => {
+    this.requestArticleListener = event => {
       // if no slug is sent, we grab it here from the location, this logic could also be handle through an event at the router
       const slug = event.detail.slug || Environment.slug || ''
       const url = `${Environment.fetchBaseUrl}articles/${slug}`
@@ -189,14 +189,14 @@ export default class Article extends HTMLElement {
   }
 
   connectedCallback () {
-    this.addEventListener('requestArticle', this.requestGetArticleListener)
+    this.addEventListener('requestArticle', this.requestArticleListener)
     this.addEventListener('postArticle', this.postArticleListener)
     this.addEventListener('deleteArticle', this.deleteArticleListener)
     this.addEventListener('requestListArticles', this.requestListArticlesListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('requestArticle', this.requestGetArticleListener)
+    this.removeEventListener('requestArticle', this.requestArticleListener)
     this.removeEventListener('postArticle', this.postArticleListener)
     this.removeEventListener('deleteArticle', this.deleteArticleListener)
     this.removeEventListener('requestListArticles', this.requestListArticlesListener)
