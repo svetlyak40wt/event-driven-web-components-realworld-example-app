@@ -23,12 +23,15 @@ export default class Article extends HTMLElement {
     this.loading = /* html */'<div class="profile-page"><div class="user-info"><div class="container"><div class="row">Loading...</div></div></div></div>'
 
     this.profileListener = event => {
-      event.detail.fetch.then(({ profile }) => { if (this.shouldComponentRender(profile, undefined)) this.render(profile, undefined) })
+      event.detail.fetch.then(({ profile }) => { if (this.shouldComponentRender(profile, undefined)) this.render(profile, undefined) }).catch(error => {
+        if (this.shouldComponentRender(null, undefined)) this.render(null, undefined)
+        console.log(`Error@ProfileFetch: ${error}`)
+      })
     }
 
     this.userListener = event => {
       event.detail.fetch.then(user => { if (this.shouldComponentRender(undefined, user)) this.render(undefined, user) }).catch(error => {
-        this.user = null
+        if (this.shouldComponentRender(undefined, null)) this.render(undefined, null)
         console.log(`Error@UserFetch: ${error}`)
       })
     }
@@ -100,7 +103,7 @@ export default class Article extends HTMLElement {
   render (profile = this.profile, user = this.user) {
     if (user) this.user = user
     if (profile) this.profile = profile
-    if (!profile) return (this.innerHTML = this.user ? this.loading : '<div class="profile-page">An error occurred fetching the profile!</div>')
+    if (!profile) return (this.innerHTML = this.user && profile !== null ? this.loading : '<div class="profile-page">An error occurred fetching the profile!</div>')
     this.innerHTML = /* html */`
     <div class="profile-page">
 
