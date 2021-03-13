@@ -16,9 +16,6 @@ export default class Article extends HTMLElement {
   constructor () {
     super()
 
-    this.user = null
-    this.fetchSingleArticle = null
-
     /**
      * Listens to the event name/typeArg: 'article'
      *
@@ -42,6 +39,9 @@ export default class Article extends HTMLElement {
   }
 
   connectedCallback () {
+    this.user = undefined
+    this.fetchSingleArticle = undefined
+
     // listen for articles
     document.body.addEventListener('article', this.articleListener)
     // on every connect it will attempt to get newest articles
@@ -87,13 +87,13 @@ export default class Article extends HTMLElement {
    * @return {void}
    */
   render (fetchSingleArticle = this.fetchSingleArticle, user = this.user) {
-    if (user) this.user = user
+    if (user !== undefined) this.user = user
     if (fetchSingleArticle) {
       this.fetchSingleArticle = fetchSingleArticle
       Promise.all([fetchSingleArticle, this.loadDependency(), this.loadChildComponents()]).then(result => {
         const [singleArticle, markdownit, children] = result
         const article = singleArticle.article
-        if (!article || !article.author || !article.tagList) return (this.innerHTML = '<div class="article-page">An error occurred rendering the article-page!</div>')
+        if (!article || !article.author || !article.tagList) return (this.innerHTML = '<div class="article-page"><div class="banner"><div class="container">An error occurred rendering the article-page!</div></div></div>')
         article.author = Object.assign(article.author, { self: user && user.username === article.author.username })
         this.innerHTML = `
           <div class="article-page">
@@ -148,7 +148,7 @@ export default class Article extends HTMLElement {
           node.replaceWith(articleMeta)
         })
         // @ts-ignore
-      }).catch(error => (this.innerHTML = console.warn(error) || (error && typeof error.toString === 'function' && error.toString().includes('aborted') ? '<div class="article-page">Loading...</div>' : '<div class="article-page">An error occurred fetching the article!</div>')))
+      }).catch(error => (this.innerHTML = console.warn(error) || (error && typeof error.toString === 'function' && error.toString().includes('aborted') ? '<div class="article-page"><div class="banner"><div class="container">Loading...</div></div></div>' : '<div class="article-page"><div class="banner"><div class="container">An error occurred fetching the article!</div></div></div>')))
     }
   }
 

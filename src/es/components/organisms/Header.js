@@ -16,7 +16,6 @@ export default class Header extends HTMLElement {
   constructor () {
     super()
 
-    this.user = null
     /**
      * Listens to the event name/typeArg: 'user'
      *
@@ -35,6 +34,8 @@ export default class Header extends HTMLElement {
   }
 
   connectedCallback () {
+    this.user = undefined
+
     this.render()
     document.body.addEventListener('user', this.userListener)
     this.dispatchEvent(new CustomEvent('getUser', {

@@ -18,8 +18,6 @@ export default class Article extends HTMLElement {
   constructor () {
     super()
 
-    this.user = null
-    this.profile = null
     this.loading = /* html */'<div class="profile-page"><div class="user-info"><div class="container"><div class="row">Loading...</div></div></div></div>'
 
     this.profileListener = event => {
@@ -52,6 +50,9 @@ export default class Article extends HTMLElement {
   }
 
   connectedCallback () {
+    this.user = undefined
+    this.profile = undefined
+
     this.loadChildComponents()
     document.body.addEventListener('profile', this.profileListener)
     document.body.addEventListener('user', this.userListener)
@@ -101,9 +102,9 @@ export default class Article extends HTMLElement {
    * @return {any}
    */
   render (profile = this.profile, user = this.user) {
-    if (user) this.user = user
-    if (profile) this.profile = profile
-    if (!profile) return (this.innerHTML = this.user && profile !== null ? this.loading : '<div class="profile-page">An error occurred fetching the profile!</div>')
+    if (user !== undefined) this.user = user
+    if (profile !== undefined) this.profile = profile
+    if (!profile) return (this.innerHTML = profile === null ? '<div class="profile-page"><div class="user-info"><div class="container"><div class="row">An error occurred fetching the profile!</div></div></div></div>' : this.loading)
     this.innerHTML = /* html */`
     <div class="profile-page">
 
