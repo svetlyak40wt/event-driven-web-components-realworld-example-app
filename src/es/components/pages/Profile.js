@@ -27,7 +27,10 @@ export default class Article extends HTMLElement {
     }
 
     this.userListener = event => {
-      event.detail.fetch.then(user => { if (this.shouldComponentRender(undefined, user)) this.render(undefined, user) })
+      event.detail.fetch.then(user => { if (this.shouldComponentRender(undefined, user)) this.render(undefined, user) }).catch(error => {
+        this.user = null
+        console.log(`Error@UserFetch: ${error}`)
+      })
     }
 
     this.followBtnListener = event => {
