@@ -64,3 +64,7 @@ For more information on how to this works with other frontends/backends, head ov
 * [TailorMadeCode](https://github.com/tailormadecode) Components Development
 * [V4L3](https://github.com/V4L3) Components Development
 * [Weedshaker](https://github.com/Weedshaker) Architecture, Tests & Components Development
+
+## Special Thanks to
+
+* [rehrbar](https://github.com/orgs/mits-gossau/people/rehrbar) who was an essential part of developing the first PoC of an [Event Driven Architecture](https://www.melectronics.ch/lp/aktionen), helping me to challenge ideas and concepts to its perfection with his profound software engineering background.
