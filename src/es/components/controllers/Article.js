@@ -163,7 +163,7 @@ export default class Article extends HTMLElement {
       // assemble query
       let query = ''
       for (const key in detail) {
-        if (key !== 'showYourFeed') query += `${query ? '&' : '?'}${key}=${detail[key]}`
+        if (key !== 'showYourFeed' && detail[key] !== undefined && detail[key] !== '') query += `${query ? '&' : '?'}${key}=${detail[key]}`
       }
       const url = `${Environment.fetchBaseUrl}articles${detail.showYourFeed ? '/feed' : ''}${query}`
       // reset old AbortController and assign new one
