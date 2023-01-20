@@ -31,7 +31,9 @@ For more information on how to this works with other frontends/backends, head ov
 
 ## Explanations
 
-* **ShadowDOM**'s mostly shine when encapsulating CSS. But the Conduit example has one global CSS Stylesheet and for that reason, it is more efficient not to have shadowDOM's, which all would have to import that global CSS separately. Note: The biggest strength of Web Components is their shadowDOM, means in a real life examples you would share general CSS styles through CSS variables and have specific styles on each component in their respective shadowDOM. This will improve performance, since the DOM renderer only needs to respect certain CSS for certain nodes/shadowDOM's. There is a good helper Class, which you can use to simply add CSS with the lines: ```this.css = '...' ``` and to avoid resetting nodes with innerHTML, it includes a function: ```this.html = '' ```. Overall, this prototype Class helps you to easily and comfortably deal with the ShadowDOM. Have a look at: [mits-gossau/web-components *(work in progress)*](https://github.com/mits-gossau/web-components/blob/master/src/es/components/prototypes/Shadow.js)
+Here you can find the 👉 [event driven web components tutorial](https://github.com/Weedshaker/event-driven-web-components-tutorial)
+
+* **ShadowDOM**'s mostly shine when encapsulating CSS. But the Conduit example has one global CSS Stylesheet and for that reason, it is more efficient not to have shadowDOM's, which all would have to import that global CSS separately. Note: The biggest strength of Web Components is their shadowDOM, means in a real life examples you would share general CSS styles through CSS variables and have specific styles on each component in their respective shadowDOM. This will improve performance, since the DOM renderer only needs to respect certain CSS for certain nodes/shadowDOM's. There is a good helper Class, which you can use to simply add CSS with the lines: ```this.css = '...' ``` and for avoiding to reset nodes with innerHTML, it includes functions like: ```this.html = '' ```. Overall, this prototype Class helps you to easily and comfortably deal with the ShadowDOM. Have a look at: [Shadow.js](https://github.com/Weedshaker/event-driven-web-components-prototypes/blob/master/src/Shadow.js)
 
 * **Dependencie**'s: This application uses ZERO production dependencies. One devDependency is used for linting, see the package.json for further details.
 
@@ -67,4 +69,4 @@ For more information on how to this works with other frontends/backends, head ov
 
 ## Special Thanks to
 
-* [rehrbar](https://github.com/orgs/mits-gossau/people/rehrbar) who was an essential part of developing the first PoC of an [Event Driven Architecture](https://www.melectronics.ch/lp/aktionen), helping me to challenge ideas and concepts to its perfection with his profound software engineering background.
+* [rehrbar](https://github.com/orgs/mits-gossau/people/rehrbar) who was an essential part of developing the first PoC of an Event Driven Architecture, helping me to challenge ideas and concepts to its perfection with his profound software engineering background.
