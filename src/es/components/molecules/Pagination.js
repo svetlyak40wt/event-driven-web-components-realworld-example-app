@@ -105,7 +105,7 @@ export default class Pagination extends HTMLElement {
           pageItems += `<li class="page-item ${i === offset / Environment.articlesPerPageLimit ? 'active' : ''}"><a class="page-link" href="">${i + 1}</a></li>`
           counter++
         }
-        if (counter > 1) {
+        if (pageItems) {
           this.innerHTML = `
           <nav>
             <ul class="pagination">
